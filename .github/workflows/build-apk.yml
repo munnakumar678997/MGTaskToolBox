@@ -1,0 +1,87 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Expo CLI & EAS CLI
+        run: npm install -g expo-cli @expo/eas-cli
+
+      - name: Run Expo Prebuild (generate android folder)
+        run: npx expo prebuild --platform android --clean
+        env:
+          EXPO_NO_TELEMETRY: 1
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x android/gradlew
+
+      - name: Build Debug APK
+        run: |
+          cd android
+          ./gradlew assembleRelease --no-daemon
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4g"
+
+      - name: Find APK file
+        run: find android -name "*.apk" -type f
+
+      - name: Upload APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MGTaskToolBox-APK
+          path: android/app/build/outputs/apk/release/*.apk
+          retention-days: 30
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: MGTaskToolBox v1.0 (Build ${{ github.run_number }})
+          body: |
+            ## MGTaskToolBox — Naya Build 🛠️
+            **by Munna Agent (MG)**
+
+            ### Is build mein kya hai:
+            - 🧮 Calculator
+            - 📐 Unit Converter
+            - ✍️ Text Tools
+            - 🔐 Password Generator
+
+            ### Install kaise karein:
+            1. Neeche APK file download karo
+            2. Phone mein "Unknown Sources" allow karo (Settings > Security)
+            3. APK install karo
+          files: android/app/build/outputs/apk/release/*.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
