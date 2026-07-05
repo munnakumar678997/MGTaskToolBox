@@ -5,6 +5,15 @@ Bahut saare chote-chote useful tools ek hi app mein.
 
 ---
 
+## ⬇️ Download APK
+
+[![Download APK](https://img.shields.io/badge/⬇️%20Download%20APK-Click%20Here-4F46E5?style=for-the-badge)](https://github.com/munnakumar678997/MGTaskToolBox/releases/latest/download/app-release.apk)
+
+> Ya phir yahan se bhi download kar sakte ho:
+> **[Releases Page →](https://github.com/munnakumar678997/MGTaskToolBox/releases)**
+
+---
+
 ## Folder Structure
 
 ```
@@ -50,14 +59,6 @@ MGTaskToolBox/
 ├── app.json                      ← Expo app settings
 └── package.json                  ← Dependencies
 ```
-
----
-
-## Naya Tool Kaise Add Karein?
-
-1. `app/tools/<tool-name>/index.tsx` banao
-2. `constants/tools.ts` mein ALL_TOOLS array mein entry add karo
-3. `app/_layout.tsx` mein ek nayi Screen entry add karo
 
 ---
 
