@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "MGTaskToolBox",
+    "slug": "mg-task-toolbox",
+    "version": "1.0.0",
+    "description": "Munna Agent ka multi-tool app — bahut saare chote-chote kaam ke tools ek jagah",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "backgroundColor": "#1A1A2E"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.munnaagent.mgtasktoolbox"
+    },
+    "android": {
+      "package": "com.munnaagent.mgtasktoolbox",
+      "adaptiveIcon": {
+        "backgroundColor": "#1A1A2E"
+      }
+    }
+  }
+}
