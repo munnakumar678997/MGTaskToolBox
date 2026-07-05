@@ -22,6 +22,19 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
+      - name: Create app icon and splash images
+        run: |
+          mkdir -p assets/images
+          sudo apt-get install -y imagemagick -q
+          convert -size 1024x1024 xc:#4F46E5 \
+            -fill white -font DejaVu-Sans-Bold -pointsize 200 \
+            -gravity center -annotate 0 "MG" \
+            assets/images/icon.png
+          convert -size 1024x1024 xc:#1A1A2E assets/images/splash.png
+          convert -size 1024x1024 xc:#4F46E5 assets/images/adaptive-icon.png
+          echo "Icons created:"
+          ls -la assets/images/
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -32,7 +45,7 @@ jobs:
         run: npm install -g expo-cli
 
       - name: Run Expo Prebuild
-        run: npx expo prebuild --platform android --clean --no-install
+        run: npx expo prebuild --platform android --clean
         env:
           EXPO_NO_TELEMETRY: 1
 
@@ -50,7 +63,7 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MGTaskToolBox-debug-apk
+          name: MGTaskToolBox-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
 
@@ -60,7 +73,7 @@ jobs:
           tag_name: v1.0-build-${{ github.run_number }}
           name: MGTaskToolBox v1.0 (Build ${{ github.run_number }})
           body: |
-            ## MGTaskToolBox — Naya Build 🛠️
+            ## MGTaskToolBox 🛠️ — Naya Build Ready!
             **by Munna Agent (MG)**
 
             ### Tools included:
@@ -69,10 +82,10 @@ jobs:
             - ✍️ Text Tools
             - 🔐 Password Generator
 
-            ### Install kaise karein:
-            1. Neeche **app-debug.apk** download karo
-            2. Phone mein Settings → Security → **Unknown Sources** ON karo
-            3. APK file install karo — bas! ✅
+            ### 📱 Install kaise karein:
+            1. Neeche **app-debug.apk** file download karo
+            2. Phone mein Settings → Security → **Unknown Sources** / **Install unknown apps** ON karo
+            3. Download ki hui APK file tap karke install karo ✅
           files: android/app/build/outputs/apk/debug/app-debug.apk
           draft: false
           prerelease: false
