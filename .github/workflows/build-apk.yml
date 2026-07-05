@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build Android APK
@@ -22,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Create app icon and splash images
+      - name: Create app icons
         run: |
           mkdir -p assets/images
           sudo apt-get install -y imagemagick -q
@@ -32,8 +35,7 @@ jobs:
             assets/images/icon.png
           convert -size 1024x1024 xc:#1A1A2E assets/images/splash.png
           convert -size 1024x1024 xc:#4F46E5 assets/images/adaptive-icon.png
-          echo "Icons created:"
-          ls -la assets/images/
+          echo "Icons created:" && ls -la assets/images/
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -73,19 +75,19 @@ jobs:
           tag_name: v1.0-build-${{ github.run_number }}
           name: MGTaskToolBox v1.0 (Build ${{ github.run_number }})
           body: |
-            ## MGTaskToolBox 🛠️ — Naya Build Ready!
+            ## MGTaskToolBox 🛠️ — APK Ready!
             **by Munna Agent (MG)**
 
-            ### Tools included:
+            ### Tools:
             - 🧮 Calculator
             - 📐 Unit Converter
             - ✍️ Text Tools
             - 🔐 Password Generator
 
-            ### 📱 Install kaise karein:
-            1. Neeche **app-debug.apk** file download karo
-            2. Phone mein Settings → Security → **Unknown Sources** / **Install unknown apps** ON karo
-            3. Download ki hui APK file tap karke install karo ✅
+            ### Install kaise karein:
+            1. Neeche **app-debug.apk** download karo
+            2. Phone mein Settings → Security → **Unknown Sources** ON karo
+            3. APK tap karke install karo ✅
           files: android/app/build/outputs/apk/debug/app-debug.apk
           draft: false
           prerelease: false
